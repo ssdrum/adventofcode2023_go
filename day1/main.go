@@ -11,14 +11,14 @@ import (
 func main() {
 	input, _ := os.Open("input.txt")
 	defer input.Close()
-	//fmt.Println(part_1(input))
+	fmt.Println(part1(input))
 
 	input, _ = os.Open("input.txt")
 	defer input.Close()
-	fmt.Println(part_2(input))
+	fmt.Println(part2(input))
 }
 
-func part_1(input *os.File) int {
+func part1(input *os.File) int {
 	tot := 0
 	fscanner := bufio.NewScanner(input)
 
@@ -47,7 +47,7 @@ func part_1(input *os.File) int {
 	return tot
 }
 
-func part_2(input *os.File) int {
+func part2(input *os.File) int {
 	numsmap := map[string]int{
 		"one":   1,
 		"two":   2,
@@ -57,24 +57,25 @@ func part_2(input *os.File) int {
 		"six":   6,
 		"seven": 7,
 		"eight": 8,
-		"nine":  9}
+		"nine":  9,
+	}
 	tot := 0
 	fscanner := bufio.NewScanner(input)
 
 	for fscanner.Scan() {
 		line := fscanner.Text()
 		var first, last int
-		first_index, last_index := len(line), -1
+		firstIndex, lastIndex := len(line), -1
 
 		// Find first and last numbers as numbers
 		for i, c := range line {
 			if unicode.IsDigit(c) {
-				if i < first_index {
-					first_index = i
+				if i < firstIndex {
+					firstIndex = i
 					first = int(c - '0')
 				}
-				if i > last_index {
-					last_index = i
+				if i > lastIndex {
+					lastIndex = i
 					last = int(c - '0')
 				}
 			}
@@ -82,14 +83,14 @@ func part_2(input *os.File) int {
 
 		// Find first and last numbers as strings
 		for str, num := range numsmap {
-			first_i := strings.Index(line, str)
-			if first_i != -1 && first_i < first_index {
-				first_index = first_i
+			firstI := strings.Index(line, str)
+			if firstI != -1 && firstI < firstIndex {
+				firstIndex = firstI
 				first = num
 			}
-			last_i := strings.LastIndex(line, str)
-			if last_i != -1 && last_i > last_index {
-				last_index = last_i
+			lastI := strings.LastIndex(line, str)
+			if lastI != -1 && lastI > lastIndex {
+				lastIndex = lastI
 				last = num
 			}
 		}
