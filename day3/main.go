@@ -20,7 +20,7 @@ func main() {
 }
 
 type number struct {
-	val, line, start, stop int
+	val, line, start, end int
 }
 
 type symbol struct {
@@ -32,50 +32,61 @@ func part1(file *os.File) (ans int) {
 	numbers := []number{}
 	symbols := []symbol{}
 
+	// Store position and value of all numbers and position of all symbols
 	lineNum := 0
 	for fscanner.Scan() {
 		line := fscanner.Text()
-		currNum := ""
-		start := 0
+		start := -1
 		for i, c := range line {
 			//  Current character is a digit
 			if unicode.IsDigit(c) {
 				// Current character is the starting digit of a number
-				if currNum == "" {
+				if start == -1 {
 					start = i
 				}
-				currNum += string(c)
+				// Current character is the last digit of a number, at the end of the line
+				if i == len(line)-1 {
+					val, err := strconv.Atoi(line[start : i+1])
+					if err != nil {
+						log.Fatal(err)
+					}
+					numbers = append(numbers, number{val, lineNum, start, i - 1})
+				}
 			} else {
 				//  Current character is not a digit
-				if currNum != "" {
+				if start != -1 {
 					// Current character is the character next the ending digit of a number
-					val, err := strconv.Atoi(currNum)
+					val, err := strconv.Atoi(line[start:i])
 					if err != nil {
-						log.Fatalf("cannot convert %v to int", val)
+						log.Fatal(err)
 					}
 					// Append new number
 					numbers = append(numbers, number{val, lineNum, start, i - 1})
-					// Reset variables
-					currNum = ""
-					start = 0
-				} else {
-					// Current character is not a number
-					if string(c) != "." {
-						// Current character is a symbol
-						symbols = append(symbols, symbol{lineNum, i})
-					}
+					start = -1
+				}
+				// Current character is a symbol
+				if string(c) != "." {
+					// Current character is a symbol
+					symbols = append(symbols, symbol{lineNum, i})
 				}
 			}
 		}
+
 		lineNum++
 	}
 
+	// Find all numbers with an adjacent symbol and compute result
 	for _, n := range numbers {
-		fmt.Println(n)
-	}
-
-	for _, s := range symbols {
-		fmt.Println(s)
+		for _, s := range symbols {
+			if s.line == n.line && (s.pos == n.start-1 || s.pos == n.end+1) {
+				ans += n.val
+				break
+			}
+			if (s.line == n.line+1 || s.line == n.line-1) && (n.start-1 <= s.pos && s.pos <= n.end+1) {
+				ans += n.val
+				break
+			}
+		}
 	}
 
 	return ans
