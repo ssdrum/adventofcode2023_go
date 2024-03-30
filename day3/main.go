@@ -74,8 +74,8 @@ func part1(file *os.File) (ans int) {
 					numbers = append(numbers, number{val, lineNum, start, i - 1})
 					start = -1
 				}
+				// Current character is a symbol
 				if string(c) != "." {
-					// Current character is a symbol
 					symbols = append(symbols, symbol{lineNum, i})
 				}
 			}
@@ -106,7 +106,7 @@ func part1(file *os.File) (ans int) {
 func part2(file *os.File) (ans int) {
 	fscanner := bufio.NewScanner(file)
 	numbers := []number{}
-	symbols := []symbol{}
+	gears := []symbol{}
 
 	// Store position and value of all numbers and position of all symbols
 	lineNum := 0
@@ -141,8 +141,8 @@ func part2(file *os.File) (ans int) {
 					start = -1
 				}
 				if string(c) == "*" {
-					// Current character is a symbol
-					symbols = append(symbols, symbol{lineNum, i})
+					// Current character is a gear
+					gears = append(gears, symbol{lineNum, i})
 				}
 			}
 		}
@@ -151,24 +151,24 @@ func part2(file *os.File) (ans int) {
 	}
 
 	// Store a map of each gear with its adjacent numbers
-	adjMap := map[string][]int{}
+	gearsMap := map[string][]int{}
 
 	// Find all gears and it's adjacent numbers
 	for _, n := range numbers {
-		for _, s := range symbols {
+		for _, g := range gears {
 			// Check if number has an adjacent symbol on the same line
-			if s.line == n.line && (s.pos == n.start-1 || s.pos == n.end+1) {
-				adjMap[s.toString()] = append(adjMap[s.toString()], n.val)
+			if g.line == n.line && (g.pos == n.start-1 || g.pos == n.end+1) {
+				gearsMap[g.toString()] = append(gearsMap[g.toString()], n.val)
 			}
 			// Check if number has an adjacent symbol on the lines above or below
-			if (s.line == n.line+1 || s.line == n.line-1) && (n.start-1 <= s.pos && s.pos <= n.end+1) {
-				adjMap[s.toString()] = append(adjMap[s.toString()], n.val)
+			if (g.line == n.line+1 || g.line == n.line-1) && (n.start-1 <= g.pos && g.pos <= n.end+1) {
+				gearsMap[g.toString()] = append(gearsMap[g.toString()], n.val)
 			}
 		}
 	}
 
 	// Calculate final result
-	for _, values := range adjMap {
+	for _, values := range gearsMap {
 		if len(values) == 2 {
 			ans += values[0] * values[1]
 		}
