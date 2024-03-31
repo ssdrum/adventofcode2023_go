@@ -7,7 +7,6 @@ import (
 	"math"
 	"os"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -35,32 +34,24 @@ func part1(file *os.File) (ans int) {
 		line := fscanner.Text()
 		matches := re.FindStringSubmatch(line)
 
-		// Store winning numbers in a map
-		winningNums := map[int]bool{}
-		for _, token := range strings.Fields(string(matches[2])) {
-			n, err := strconv.Atoi(token)
-			if err != nil {
-				log.Fatal(err)
-			}
+		// Store winning numbers in a map for constant lookup time
+		winningNums := map[string]bool{}
+		for _, n := range strings.Fields(string(matches[2])) {
 			winningNums[n] = true
 		}
 
 		// Find number of matching winning numbers
-		win := 0
-		for _, token := range strings.Fields(string(matches[3])) {
-			n, err := strconv.Atoi(token)
-			if err != nil {
-				log.Fatal(err)
-			}
+		wins := 0
+		for _, n := range strings.Fields(string(matches[3])) {
 			_, ok := winningNums[n]
 			if ok {
-				win += 1
+				wins++
 			}
 		}
 
 		// Calculate result
-		if win > 0 {
-			ans += int(math.Pow(float64(2), float64(win-1)))
+		if wins > 0 {
+			ans += int(math.Pow(float64(2), float64(wins-1)))
 		}
 	}
 
