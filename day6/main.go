@@ -85,18 +85,14 @@ func part2(file *os.File) (ans int) {
 
 	// Parse time
 	fscanner.Scan()
-	line := fscanner.Text()
-	fields := strings.Fields(line)[1:]
-	time, err := strconv.ParseUint(strings.Join(fields, ""), 10, 64)
+	time, err := strconv.ParseUint(strings.Join(strings.Fields(fscanner.Text())[1:], ""), 10, 64)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	// Parse record
 	fscanner.Scan()
-	line = fscanner.Text()
-	fields = strings.Fields(line)[1:]
-	record, err = strconv.ParseUint(strings.Join(fields, ""), 10, 64)
+	record, err = strconv.ParseUint(strings.Join(strings.Fields(fscanner.Text())[1:], ""), 10, 64)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -107,7 +103,7 @@ func part2(file *os.File) (ans int) {
 
 // Same as above but with unsigned integer to handle very large values
 func calcWinWays2(time uint64, record uint64) (winWays int) {
-	for holdTime := uint64(0); holdTime <= uint64(time); holdTime++ {
+	for holdTime := uint64(0); holdTime <= time; holdTime++ {
 		if time*holdTime-holdTime*holdTime > record {
 			winWays++
 		}
