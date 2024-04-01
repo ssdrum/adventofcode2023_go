@@ -203,8 +203,6 @@ func part2(file *os.File) (ans uint) {
 				if location < minLocation {
 					mu.Lock()
 					minLocation = location
-					fmt.Printf("seed: %v, soil: %v, fertilizer: %v, water: %v, light: %v, temperature: %v, humidity: %v, location: %v\n",
-						seed, soil, fertilizer, water, light, temperature, humidity, location)
 					mu.Unlock()
 				}
 			}
