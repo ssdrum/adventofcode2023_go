@@ -82,7 +82,7 @@ func part2(file *os.File) (ans int) {
 		for _, n := range strings.Fields(string(matches[2])) {
 			winningNums[n] = true
 		}
-		// Find number of matching winning numbers
+		// Find number of matching winning numbers in the scratch card
 		wins := 0
 		for _, n := range strings.Fields(string(matches[3])) {
 			_, ok := winningNums[n]
@@ -91,7 +91,7 @@ func part2(file *os.File) (ans int) {
 			}
 		}
 
-		// Store number of copies won for each scratch card
+		// Store number of copies won of each scratch card
 		for i := cardNum + 1; i < cardNum+wins+1; i++ {
 			copiesWon[i] += copiesWon[cardNum] + 1
 		}
