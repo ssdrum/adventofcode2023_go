@@ -55,6 +55,7 @@ func part1(file *os.File) (ans int) {
 		distances = append(distances, d)
 	}
 
+	// Calculate result
 	ans = 1
 	for i, t := range times {
 		ans *= calcWinWays(t, distances[i])
@@ -63,6 +64,10 @@ func part1(file *os.File) (ans int) {
 	return ans
 }
 
+// Calculates the number of ways we can beat the record, i.e. find the number of
+// inputs timeHeld in the range [0, time] that satisfy the inequality:
+//
+//	time * timeHeld - timeHeld^2 > record
 func calcWinWays(time int, record int) (winWays int) {
 	for holdTime := 0; holdTime <= time; holdTime++ {
 		if time*holdTime-holdTime*holdTime > record {
@@ -74,11 +79,11 @@ func calcWinWays(time int, record int) (winWays int) {
 }
 
 func part2(file *os.File) (ans int) {
-	var time, distance uint64
+	var time, record uint64
 
 	fscanner := bufio.NewScanner(file)
 
-	// Parse times
+	// Parse time
 	fscanner.Scan()
 	line := fscanner.Text()
 	fields := strings.Fields(line)[1:]
@@ -87,16 +92,17 @@ func part2(file *os.File) (ans int) {
 		log.Fatal(err)
 	}
 
-	// Parse distances
+	// Parse record
 	fscanner.Scan()
 	line = fscanner.Text()
 	fields = strings.Fields(line)[1:]
-	distance, err = strconv.ParseUint(strings.Join(fields, ""), 10, 64)
+	record, err = strconv.ParseUint(strings.Join(fields, ""), 10, 64)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	return calcWinWays2(time, distance)
+	// Calculate result
+	return calcWinWays2(time, record)
 }
 
 // Same as above but with unsigned integer to handle very large values
