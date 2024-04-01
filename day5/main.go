@@ -184,7 +184,6 @@ func part2(file *os.File) (ans uint) {
 	// Find min location
 	var minLocation uint = math.MaxUint
 	for i := 0; i < len(seeds); i += 2 {
-		fmt.Println(i)
 		start, length := seeds[i], seeds[i+1]
 
 		// Use multi-threading
